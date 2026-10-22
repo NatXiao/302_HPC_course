@@ -30,10 +30,10 @@ int main() {
 
     // End chrono
     auto end = high_resolution_clock::now();
-    auto duration = duration_cast<seconds>(end - start);
+    auto duration = duration_cast<milliseconds>(end - start);
 
     // Print the time
-    cout << "Time: " << duration.count() << " s\n";
+    cout << "Time: " << duration.count() << " ms\n";
 
     return 0;
 }

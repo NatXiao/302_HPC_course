@@ -21,7 +21,12 @@ int main(int argc, char** argv) {
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
     // Array initialization
-    int global_size = 100'000'000;
+    int global_size;
+    if (argc > 1){
+        global_size = atoi(argv[1]);
+    } else {
+        global_size = 67'200'000;
+    }
     int local_size = global_size / world_size;
 
     // Vectors
@@ -48,13 +53,13 @@ int main(int argc, char** argv) {
     auto start = high_resolution_clock::now();
 
     // vector-vector
-    int result = 0;
+    long long result = 0;
     for (int i = 0; i < local_size; i++){
         result += local_vector1[i]*local_vector2[i];
     }
     
-    int global_result;
-    MPI_Reduce(&result, &global_result, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
+    long long global_result;
+    MPI_Reduce(&result, &global_result, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
 
     // End chrono
     auto end = high_resolution_clock::now();
@@ -65,8 +70,10 @@ int main(int argc, char** argv) {
         cout << "The dot product vector-vector has taken: " << duration.count() << " ms\n";
     }
 
-    if (rank==0){delete[] global_vector1, global_vector2;}
-    delete[] local_vector1, local_vector2;
+
+    if (rank==0){delete[] global_vector1; delete[] global_vector2;}
+    delete[] local_vector1;
+    delete[] local_vector2;
 
     // Finalisation de MPI
     MPI_Finalize();

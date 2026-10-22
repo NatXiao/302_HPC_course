@@ -10,7 +10,7 @@ int main(){
     auto start = high_resolution_clock::now();
 
     // Print Hello World
-    cout << "Hello World \n";
+    cout << "Hello World\n";
 
     // End chrono
     auto end = high_resolution_clock::now();

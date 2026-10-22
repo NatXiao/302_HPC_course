@@ -21,7 +21,7 @@ int main(int argc, char** argv){
         cout << "Number of processors: " << world_size << "\n";
     }
 
-     // Print Hello World for every processor
+    // Print Hello World for every processor
     cout << "Processor " << rank << " - Hello World\n";
 
     // Finalisation de MPI

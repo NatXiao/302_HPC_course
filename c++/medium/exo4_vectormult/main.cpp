@@ -1,13 +1,24 @@
 #include <chrono>
 #include <iostream>
+#include <cstdlib>
 
 using namespace std;
 using namespace std::chrono;
 
-int main() {
+int main(int argc, char *argv[]) {
     
-    // Array initialization
-    int size = 100'000'000;
+    int size;
+    // Get the size of the vectors
+    if (argc == 2){
+        size = stoi(argv[1]);
+    }
+    else {
+        // Print an error if the number of argument is wrong
+        cerr << "There must be one argument while executing the program.\n";
+        exit(1); 
+    }
+
+    // Array initialization    
     int* vector1 = new int[size];
     int* vector2 = new int[size];
 
@@ -20,9 +31,9 @@ int main() {
     auto start = high_resolution_clock::now();
 
     // vector-vector
-    int result = 0;
+    long long result = 0;
     for (int i = 0; i < size; i++){
-        result += vector1[i]*vector2[i];
+        result += (long long) vector1[i]*vector2[i];
     }
     
     // End chrono
@@ -30,9 +41,11 @@ int main() {
     auto duration = duration_cast<milliseconds>(end - start);
 
     // Print the time
+    cout << "The dot product vector-vector is: " << result << "\n";
     cout << "The dot product vector-vector has taken: " << duration.count() << " ms\n";
 
-    delete[] vector1, vector2;
+    delete[] vector1; 
+    delete[] vector2;
 
     return 0;
 }

@@ -8,13 +8,13 @@ using namespace std;
 using namespace std::chrono;
 
 // Open file and compute the R G B values
-void computeMeanRGB(const string& filename, double& meanR, double& meanG, double& meanB) {
+bool computeMeanRGB(const string& filename, double& meanR, double& meanG, double& meanB) {
 
     // Open File
     ifstream file(filename);
     if (!file.is_open()) {
         cerr << "Error opening file: " << filename << endl;
-        return;
+        return false;
     }
 
     string line;
@@ -37,10 +37,11 @@ void computeMeanRGB(const string& filename, double& meanR, double& meanG, double
     file.close();
 
     // Compute the mean values
-    meanR = float(sumR) / count;
-    meanG = float(sumG) / count;
-    meanB = float(sumB) / count;
+    meanR = double(sumR) / count;
+    meanG = double(sumG) / count;
+    meanB = double(sumB) / count;
 
+    return true;
 }
 
 int main() {
@@ -60,7 +61,9 @@ int main() {
         string file = filenames[i];
 
         // Compute the Mean Values
-        computeMeanRGB(file, meanR, meanG, meanB);
+        if (!computeMeanRGB(file, meanR, meanG, meanB)) {
+            continue; // Skip to the next file if there was an error
+        }
 
         // Print the data
         cout << "File: " << file << "\nMean R: " << meanR << "\nMean G: "<< meanG << "\nMean B: " << meanB << "\n\n";

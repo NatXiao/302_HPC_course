@@ -1,7 +1,7 @@
 all: main
 
 main:
-	g++ main.cpp -o run
+	mpic++ main.cpp -o run
 
 clean:
 	rm run

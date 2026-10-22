@@ -1,5 +1,6 @@
 #include <iostream>
 #include <chrono>
+#include <cstdlib>
 
 // MPI 
 #include "mpi.h"
@@ -23,7 +24,7 @@ int main(int argc, char** argv){
     int size = 67'200'000;
     int local_size = size/world_size;
     int* vector1 = new int[local_size];
-    int* fullVector1;
+    int* fullVector1 = nullptr;
 
     // Array Scatter
     if (rank==0){
@@ -32,25 +33,23 @@ int main(int argc, char** argv){
         for (int i = 0; i < size; i++){
             fullVector1[i] = rand() % 1000;
         }
-        MPI_Scatter(fullVector1, local_size, MPI_INT, vector1, local_size, MPI_INT, 0, MPI_COMM_WORLD);
+        
     }
-    else {
-        MPI_Scatter(fullVector1, local_size, MPI_INT, vector1, local_size, MPI_INT, 0, MPI_COMM_WORLD);
-    }
+    MPI_Scatter(fullVector1, local_size, MPI_INT, vector1, local_size, MPI_INT, 0, MPI_COMM_WORLD);
 
     // Start chrono
     auto start = high_resolution_clock::now();
 
     // Local Vector Sum
-    int local_sum = 0;
+    long long local_sum = 0;
     for (int i = 0; i < local_size; i++){
         local_sum += vector1[i];
     }
 
     // Global Sum
-    int global_sum;
-    //MPI_Reduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, 0, MPI_COMM_WORLD);
-    MPI_Allreduce(&local_sum, &global_sum, 1, MPI_INT, MPI_SUM, MPI_COMM_WORLD);
+    long long global_sum;
+    //MPI_Reduce(&local_sum, &global_sum, 1, MPI_LONG_LONG, MPI_SUM, 0, MPI_COMM_WORLD);
+    MPI_Allreduce(&local_sum, &global_sum, 1, MPI_LONG_LONG, MPI_SUM, MPI_COMM_WORLD);
 
     if (rank==0){
         cout << "The global sum is: " << global_sum << "\n";
@@ -61,7 +60,7 @@ int main(int argc, char** argv){
         auto end = high_resolution_clock::now();
         auto duration = duration_cast<milliseconds>(end - start);
 
-        // Print the time$
+        // Print the time
         cout << "The vector sum has taken: " << duration.count() << " ms\n";
     }
 

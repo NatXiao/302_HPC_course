@@ -23,7 +23,9 @@ int main(int argc, char** argv){
 
     for (int i = 0; i < world_size; i++){
         
-        cout << "Processor " << rank << " - Hello World\n";
+        if (rank==i){
+            cout << "Processor " << rank << " - Hello World\n";
+        }
         MPI_Barrier(MPI_COMM_WORLD);
     }
 

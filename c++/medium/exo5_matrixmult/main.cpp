@@ -1,5 +1,7 @@
 #include <chrono>
 #include <iostream>
+#include <cstdlib>
+#include <string>
 
 using namespace std;
 using namespace std::chrono;
@@ -7,7 +9,7 @@ using namespace std::chrono;
 int* computeMatrixMatrix(const int* A, const int* B, const int rows, const int columns){
 
     // = Result of the Matrix.Matrix
-    int* result = new int[rows * rows];
+    int* result = new int[rows * rows]();
 
     // Matrix-Matrix
     for (int i = 0; i < rows; ++i) {
@@ -21,16 +23,23 @@ int* computeMatrixMatrix(const int* A, const int* B, const int rows, const int c
     return result;
 }
 
-int main() {
+int main(int argc, char *argv[]) {
 
-    // Start chrono
-    auto start = high_resolution_clock::now();
+    // Matrix initialization
+    int rows;
+    int columns;
 
-    // Matrix and vector initialization
-    int rows = 1000;
-    int columns = 1000;
+    if (argc == 2){
+        rows = stoi(argv[1]);
+        columns = stoi(argv[1]);
+    }
+    else {
+        // Print an error if the number of argument is wrong
+        cerr << "There must be one argument while executing the program.\n";
+        exit(1); 
+    }
 
-    // = Matrix1
+    // Matrix1
     int* matrix1 = new int[rows * columns]; //rows x columns
     for (int i = 0; i < rows; ++i) {
         for (int j = 0; j < columns; ++j) {
@@ -38,7 +47,7 @@ int main() {
         }
     }
 
-    // = Matrix2
+    // Matrix2
     int* matrix2 = new int[columns * rows]; //columns x rows
     for (int i = 0; i < columns; ++i) {
         for (int j = 0; j < rows; ++j) {
@@ -46,15 +55,20 @@ int main() {
         }
     }
 
+    // Start chrono
+    auto start = high_resolution_clock::now();
+
     // = Result of the Matrix.Matrix
     int* result = computeMatrixMatrix(matrix1, matrix2, rows, columns);
-
-    // Clean up
-    delete[] matrix1, matrix2, result;
 
     // End chrono
     auto end = high_resolution_clock::now();
     auto duration = duration_cast<milliseconds>(end - start);
+
+    // Clean up
+    delete[] matrix1; 
+    delete[] matrix2;
+    delete[] result;
     
     // Print the time
     cout << "The matrix-matrix multiplication has taken: " << duration.count() << " ms\n";

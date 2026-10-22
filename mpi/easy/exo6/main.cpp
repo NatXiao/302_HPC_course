@@ -43,7 +43,8 @@ int main(int argc, char** argv){
         }
     }
 
-    delete[] vector1, vector_maximum;
+    delete[] vector1;
+    delete[] vector_maximum;
 
     // Finalisation de MPI
     MPI_Finalize();
